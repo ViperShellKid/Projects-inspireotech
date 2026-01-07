@@ -1,0 +1,187 @@
+Project Output & Analysis
+
+Project Title: Gobuster-Based Web & Subdomain Enumeration
+Target: https://resorts.mannatgroup.in
+Tool Used: Gobuster v3.8
+Environment: Kali Linux
+
+1. Tool Setup & Verification
+
+Gobuster was successfully installed using apt.
+
+Version verified as Gobuster v3.8, confirming latest stable build.
+
+Required wordlists were confirmed under /usr/share/wordlists.
+
+Result:
+✔ Tool installation and environment setup completed successfully.
+
+2. Directory Enumeration (Basic Scan)
+
+Command Used:
+
+gobuster dir -u http://resorts.mannatgroup.in -w /usr/share/wordlists/dirb/common.txt
+
+Observations:
+
+Server actively responded to requests.
+
+Several restricted files returned:
+
+.htaccess → 403 Forbidden
+
+.htpasswd → 403 Forbidden
+
+History files like .bash_history, .sh_history returned 406, indicating request filtering.
+
+Analysis:
+
+The server is properly restricting access to sensitive configuration files.
+
+Presence of these files confirms Apache-based configuration.
+
+3. Status Code Filtering (200 OK Only)
+
+Command Used:
+
+gobuster dir -u http://resorts.mannatgroup.in \
+-w /usr/share/wordlists/dirb/common.txt -s 200 -b ""
+
+Discovered Accessible Resources (Status 200):
+Resource	Description
+/controlpanel	Hosting control panel page
+/cpanel	cPanel interface
+/webmail	Webmail login portal
+/robots.txt	Search engine directives
+
+Analysis:
+
+These pages are publicly accessible.
+
+/robots.txt may expose hidden or disallowed paths.
+
+Control panel and webmail exposure increases attack surface.
+
+4. Extension-Based Enumeration
+
+Command Used:
+
+gobuster dir -u https://resorts.mannatgroup.in \
+-w directory-list-2.3-medium.txt \
+-x php,html,txt -t 50 --status-codes 200
+
+Key Files Found (Status 200):
+File	Purpose
+/wp-login.php	WordPress admin login
+/readme.html	WordPress installation info
+/license.txt	License disclosure
+/robots.txt	Crawl rules
+/webmail	Mail access
+/controlpanel, /cpanel	Hosting interfaces
+
+Analysis:
+
+Confirms WordPress CMS is in use.
+
+Exposed WordPress files can be used for:
+
+Version fingerprinting
+
+Login attack surface analysis
+
+No direct exploitation attempted (recon only).
+
+5. Redirect & Error Code Analysis
+Status Code Patterns Observed:
+Status Code	Meaning
+200	Accessible resource
+301 / 302	Redirect to valid pages
+403	Forbidden (proper protection)
+409	Application conflict
+500	Server-side error
+503	Service unavailable
+
+Analysis:
+
+Large number of 301 redirects shows proper URL normalization.
+
+500 & 503 errors may indicate:
+
+Legacy paths
+
+Disabled modules
+
+Error handling weaknesses
+
+6. WordPress Structure Identification
+
+Key Indicators:
+
+/wp-login.php
+
+/wp-admin/
+
+/wp-content/
+
+/wp-includes/
+
+/xmlrpc.php (405 – Method not allowed)
+
+Analysis:
+
+WordPress is properly locked but still fingerprintable.
+
+XML-RPC exists but restricted, reducing brute-force risk.
+
+7. Subdomain Enumeration
+
+Command Used:
+
+gobuster dns -d mannatgroup.in -w subdomains-top1million-110000.txt
+
+Discovered Subdomains:
+Subdomain	IP
+ftp.mannatgroup.in	50.116.93.192
+mail.mannatgroup.in	50.116.93.192
+webmail.mannatgroup.in	50.116.93.192
+cpanel.mannatgroup.in	50.116.93.192
+whm.mannatgroup.in	50.116.93.192
+autodiscover.mannatgroup.in	50.116.93.192
+localhost.mannatgroup.in	127.0.0.1
+
+Analysis:
+
+Hosting uses shared infrastructure.
+
+Presence of FTP, mail, and admin subdomains increases reconnaissance scope.
+
+localhost resolving to 127.0.0.1 indicates internal mapping (not exploitable externally).
+
+8. Security Impact Summary
+Positive Security Controls:
+
+✔ Sensitive config files blocked
+✔ Admin panels redirect properly
+✔ XML-RPC restricted
+
+Potential Exposure Areas:
+
+⚠ Public access to /wp-login.php
+⚠ Webmail and control panel discoverable
+⚠ Server error responses (500/503) visible
+
+9. Project Conclusion
+
+This project successfully demonstrated the use of Gobuster for:
+
+Directory enumeration
+
+File discovery using extensions
+
+Status code filtering
+
+CMS fingerprinting
+
+Subdomain enumeration
+
+The results highlight how reconnaissance tools like Gobuster help security teams map attack surfaces and identify exposed resources without exploitation. Proper server hardening and access control were observed, with minor information disclosure risks identified.

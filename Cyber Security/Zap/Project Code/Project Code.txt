@@ -1,0 +1,196 @@
+Project Output & Detailed Analysis
+Project Title
+
+Web Application Vulnerability Assessment Using OWASP ZAP
+
+Target Application
+
+URL: https://srishtihospital.in/
+Tool Version: OWASP ZAP v2.16.1
+Scan Type: Automated Scan + Traditional Spider + AJAX Spider
+
+1. Scan Overview
+
+Total Alerts Identified: 24
+
+Scan Confidence Levels: Low to High
+
+Scan Coverage:
+
+Static pages
+
+WordPress dynamic content
+
+Forms and POST requests
+
+Scan Status: Completed (100%)
+
+OWASP ZAP successfully crawled and analyzed the target application using both traditional and AJAX-based crawling techniques.
+
+2. Site Structure Discovery (Sites Tree Analysis)
+
+ZAP discovered and mapped the following key components:
+
+Root domain: https://srishtihospital.in
+
+WordPress endpoints:
+
+/wp-content/
+
+/wp-includes/
+
+/wp-json/
+
+POST-based form submissions (Fluent Forms)
+
+Dynamic URLs such as:
+
+/pt_doctor_type/*
+
+/paged/*
+
+/feed/
+
+Analysis:
+The application is confirmed to be WordPress-based with multiple dynamic endpoints, forms, and feeds, increasing the attack surface.
+
+3. Spider Scan Results (Traditional Spider)
+
+URLs Found: 5322
+
+Nodes Added: 3398
+
+Methods Observed:
+
+GET
+
+POST
+
+Status: 100% completed
+
+Analysis:
+The traditional spider effectively crawled static and server-rendered pages, identifying a large number of accessible endpoints and content feeds.
+
+4. AJAX Spider Results
+
+Crawled URLs: 41
+
+AJAX-based requests detected
+
+Out-of-scope external resources blocked automatically
+
+Analysis:
+AJAX Spider successfully detected JavaScript-driven content and dynamic requests that traditional spidering might miss. This ensures better coverage for modern web applications.
+
+5. Vulnerability Alerts Summary
+5.1 Absence of Anti-CSRF Tokens (Medium Risk)
+
+Total Instances: 2246
+
+Affected Area: HTML forms (POST requests)
+
+CWE ID: 352
+
+Detection Method: Passive Scan
+
+Description:
+ZAP identified multiple HTML forms that do not contain anti-CSRF tokens, making them vulnerable to Cross-Site Request Forgery attacks.
+
+Security Impact:
+Attackers could trick authenticated users into performing unwanted actions without their consent.
+
+5.2 Content Security Policy (CSP) Issues (Medium Risk)
+
+Detected CSP-related misconfigurations:
+
+CSP Header Not Set
+
+script-src unsafe-inline
+
+style-src unsafe-inline
+
+Wildcard directives used
+
+No fallback directives defined
+
+CWE ID: 693
+Confidence: High
+
+Security Impact:
+Weak CSP configuration increases the risk of:
+
+Cross-Site Scripting (XSS)
+
+Injection of malicious scripts
+
+Client-side attacks
+
+5.3 Missing Anti-Clickjacking Header (Medium Risk)
+
+X-Frame-Options header not configured
+
+Security Impact:
+The website can be embedded inside an attacker-controlled iframe, leading to clickjacking attacks.
+
+5.4 Cookie Security Issues (Low to Medium Risk)
+
+Detected cookie misconfigurations:
+
+Cookies missing HttpOnly flag
+
+Cookies missing SameSite attribute
+
+Security Impact:
+Cookies may be accessed via client-side scripts or sent in cross-site requests, increasing session hijacking risk.
+
+5.5 Subresource Integrity (SRI) Missing (Low Risk)
+
+External JavaScript resources loaded without integrity checks
+
+Security Impact:
+If a third-party script is compromised, malicious code could be executed on the site.
+
+5.6 Information Disclosure Issues (Low Risk)
+
+X-Powered-By header exposed
+
+Internal implementation details visible in responses
+
+Security Impact:
+Helps attackers fingerprint backend technologies.
+
+6. Risk Classification Summary
+Risk Level	Count
+Medium	Majority of alerts
+Low	Several alerts
+High	None
+Informational	Few
+
+Analysis:
+No critical vulnerabilities were found, but multiple security misconfigurations were identified that require attention.
+
+7. Ethical Considerations
+
+No exploitation attempted
+
+No payload injection performed
+
+Only automated and passive scanning used
+
+Scanning conducted strictly for educational purposes
+
+False positives reviewed before documentation
+
+8. Security Recommendations
+Vulnerability	Recommended Fix
+CSRF Missing	Implement CSRF tokens in all forms
+Weak CSP	Enforce strict CSP headers
+Clickjacking	Add X-Frame-Options: DENY
+Cookie Issues	Enable HttpOnly and SameSite
+Info Disclosure	Remove unnecessary headers
+SRI Missing	Add integrity attributes to scripts
+9. Project Conclusion
+
+This project demonstrated the effective use of OWASP ZAP to perform a comprehensive security assessment of a real-world web application. Using automated scans, traditional spidering, and AJAX spidering, multiple security weaknesses were identified, primarily related to missing security headers, CSRF protection, and client-side security policies.
+
+The results highlight the importance of secure configuration and proactive vulnerability scanning in modern web applications.
