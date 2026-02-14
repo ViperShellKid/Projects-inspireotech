@@ -1,0 +1,130 @@
+Project Output and Analysis
+Project Title
+
+Website Vulnerability Assessment Using Nmap
+
+Overview
+
+This project focused on performing a detailed vulnerability assessment of the website hotelvrisa.com using Nmap. Multiple scanning techniques were applied to identify live hosts, open ports, running services, service versions, SSL/TLS configuration issues, and potential security weaknesses. The results provide a clear view of the target’s attack surface and help in recommending appropriate security measures.
+
+Host Discovery
+
+A host discovery scan was performed to verify whether the target system was reachable.
+
+The scan confirmed that hotelvrisa.com (190.92.174.109) was alive and responding with very low latency. Reverse DNS resolution mapped the IP address to p3613.bom1.stableserver.net, indicating that the server is hosted on a managed hosting infrastructure.
+
+Basic Port Scanning
+
+A standard Nmap scan was conducted to identify open ports.
+
+The scan revealed multiple open TCP ports including FTP, DNS, HTTP, POP3, IMAP, HTTPS, SMTP, database services, and alternate HTTPS services. A large number of ports were filtered, which suggests that a firewall or filtering mechanism is present on the server.
+
+The presence of many exposed services increases the overall attack surface and requires careful security hardening.
+
+Service and Version Detection
+
+Service version detection was performed to identify the exact services running on open ports.
+
+The scan identified the following key services:
+
+Microsoft IIS HTTP Server version 10.0 running on ports 80, 443, and 8443
+
+Microsoft FTP service on port 21
+
+MailEnable services for SMTP, POP3, and IMAP
+
+Microsoft SQL Server 2022 on port 1433
+
+MariaDB database server on port 3306
+
+The operating system was identified as Microsoft Windows, confirming that the server is a Windows-based environment.
+
+Exposing database and mail services directly to the internet can be risky if not properly secured.
+
+Aggressive Scan Analysis
+
+An aggressive scan was executed using advanced Nmap options to collect maximum information.
+
+This scan provided details such as:
+
+Open ports and services
+
+SSL certificate information
+
+Script scan results
+
+Operating system detection
+
+Network latency and host availability
+
+The aggressive scan confirmed the presence of multiple externally accessible services and revealed SSL certificate details associated with different hosted domains.
+
+Default Script Scan
+
+Nmap default scripts were executed to identify common misconfigurations and security issues.
+
+The scripts detected:
+
+Missing or weak HTTP security headers
+
+Robots.txt file presence
+
+Services responding with default configurations
+
+The HTTP service did not automatically redirect traffic from HTTP to HTTPS, which may allow insecure access.
+
+HTTP Security Headers Analysis
+
+The HTTP security headers scan showed that HSTS (HTTP Strict Transport Security) was not configured on the HTTPS server.
+
+This means browsers are not forced to use HTTPS, which can expose users to downgrade attacks and session hijacking.
+
+SSL/TLS Certificate and Cipher Analysis
+
+An SSL scan was performed on port 443 to evaluate certificate validity and encryption strength.
+
+The SSL certificate:
+
+Was issued to hotelvrisa.com
+
+Was valid within the specified date range
+
+Used RSA public key encryption
+
+Was signed using SHA-256
+
+The cipher analysis revealed support for older cipher suites, including 3DES, which is vulnerable to the SWEET32 attack. The presence of legacy TLS cipher suites reduces overall encryption strength.
+
+TLS versions supported included TLS 1.0, TLS 1.1, TLS 1.2, and TLS 1.3. The availability of older TLS versions increases the risk of cryptographic attacks.
+
+Full Port Scan
+
+A full port scan using all 65,535 TCP ports was initiated to ensure no hidden services were missed.
+
+The scan confirmed that only the previously identified ports were open, while the majority of ports were filtered. This indicates partial firewall protection but still leaves several critical services exposed.
+
+Vulnerability Summary
+
+The scan results indicate the following security concerns:
+
+Multiple open services exposed to the internet
+
+Database and mail services accessible externally
+
+Lack of forced HTTPS redirection
+
+Missing HSTS configuration
+
+Support for weak SSL/TLS cipher suites
+
+Use of legacy TLS versions
+
+Large attack surface due to numerous open ports
+
+Security Recommendations
+
+The server should restrict access to unnecessary services using firewall rules. Database and mail services should be limited to trusted IP addresses only. Legacy TLS versions and weak cipher suites should be disabled, and only strong modern encryption should be enforced. HTTP traffic should be redirected to HTTPS, and HSTS should be enabled to enhance browser-level security. Regular vulnerability scans should be conducted to ensure continuous security improvement.
+
+Conclusion
+
+This project successfully demonstrated how Nmap can be used to perform a comprehensive website vulnerability assessment. By combining host discovery, port scanning, service detection, script scanning, and SSL analysis, critical security weaknesses were identified. The findings highlight the importance of proper service hardening, secure encryption practices, and proactive security monitoring to protect web infrastructure from potential threats.

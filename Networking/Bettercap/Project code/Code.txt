@@ -1,0 +1,181 @@
+Project Output & Detailed Analysis
+Project Title
+
+Network Traffic Capture, DNS Spoofing, and Credential Analysis Using Bettercap
+
+Tool Used
+
+Bettercap v2.33.0
+
+Platform: Kali Linux
+
+Network Type: Local Area Network (LAN)
+
+1. Test Environment Setup
+
+To simulate a controlled attack environment, a local web server was started on the Kali machine.
+
+Command Used
+sudo service apache2 start
+
+
+Result:
+✔ Apache web server started successfully and was ready to host fake or test web pages for redirection.
+
+2. Network Sniffing Configuration
+
+The network sniffer module was studied and configured to capture traffic flowing through the attacker system.
+
+Important Parameter
+net.sniff.local
+
+
+Purpose:
+
+When enabled, captures packets to and from the attacker machine
+
+Useful for monitoring redirected traffic during MITM attacks
+
+3. ARP Spoofing Configuration (MITM Setup)
+Commands Used
+set arp.spoof.fullduplex true
+set arp.spoof.targets 192.168.95.129
+
+
+Analysis:
+
+Full-duplex ARP spoofing poisoned both the target and the gateway
+
+Enabled a stable Man-in-the-Middle (MITM) position
+
+Target system traffic was successfully routed through the attacker machine
+
+4. DNS Sniffing & Observation
+Command Used
+net.sniff on
+
+
+Observed Output:
+
+DNS queries from the target system were captured
+
+Requests to domains such as:
+
+mozilla-ohttp.fastly-edge.com
+
+detectportal.prod.cloudops.mozgcp.net
+
+Reverse DNS lookups (in-addr.arpa) returned Non-Existent Domain
+
+Analysis:
+This confirms that DNS traffic from the victim machine was successfully intercepted and monitored.
+
+5. DNS Spoofing Configuration
+
+To demonstrate DNS spoofing, a specific domain was configured to resolve to the attacker’s IP address.
+
+Commands Used
+set dns.spoof.domains motionmodexys.com
+set dns.spoof.address 192.168.95.132
+
+
+Purpose:
+
+Redirect victim traffic for motionmodexys.com to the Kali machine
+
+Simulate phishing or malicious redirection scenarios
+
+6. DNS Spoofing Result (Client-Side Observation)
+
+On the Windows target machine, when the user attempted to access:
+
+http://motionmodexys.com
+
+Observed Result
+
+Browser displayed: “Server Not Found”
+
+The domain failed to load correctly
+
+Analysis:
+
+DNS spoofing successfully altered name resolution
+
+Since no matching hosted content was available for that domain on Apache, the browser failed to load the site
+
+This confirms that DNS resolution was controlled by the attacker
+
+✔ DNS spoofing attack was successfully demonstrated
+
+7. HTTP Traffic & Credential Capture Demonstration
+
+Using a deliberately vulnerable test website (testphp.vulnweb.com):
+
+HTTP requests and responses were intercepted
+
+Login POST request captured:
+
+uname=test&pass=test
+
+
+HTTP headers revealed:
+
+Server version
+
+PHP version
+
+Session cookies
+
+Analysis:
+
+Plain-text HTTP traffic can be easily intercepted in MITM attacks
+
+Sensitive data such as usernames, passwords, cookies, and headers are exposed
+
+Highlights the importance of HTTPS and secure transport layers
+
+8. Security Impact Assessment
+Attacks Successfully Demonstrated
+
+Network reconnaissance
+
+ARP spoofing (MITM)
+
+DNS sniffing
+
+DNS spoofing
+
+HTTP traffic interception
+
+Credential capture from unsecured websites
+
+Risks Identified
+
+DNS manipulation can redirect users to malicious servers
+
+MITM attackers can steal sensitive data
+
+HTTP-based logins are highly insecure on shared networks
+
+9. Ethical Considerations
+
+All testing performed in a controlled lab environment
+
+Only test websites and test credentials were used
+
+No real user data was accessed
+
+The project strictly follows ethical hacking guidelines
+
+10. Security Recommendations
+Issue	Recommendation
+ARP Spoofing	Enable Dynamic ARP Inspection (DAI)
+DNS Spoofing	Use secure DNS (DNSSEC, DoH)
+HTTP Traffic	Enforce HTTPS everywhere
+Credential Exposure	Use encrypted authentication
+Network Attacks	Monitor ARP tables & IDS alerts
+11. Project Conclusion
+
+This project successfully demonstrated how Bettercap can be used to analyze and test network security by performing MITM-based attacks such as ARP spoofing, DNS spoofing, and traffic sniffing. The experiment highlighted how insecure network configurations and unencrypted protocols can expose sensitive information to attackers.
+
+The project emphasizes the importance of secure network design, encrypted communication, and proactive monitoring to defend against such attacks.

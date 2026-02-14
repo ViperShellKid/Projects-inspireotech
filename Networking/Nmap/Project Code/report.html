@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Vulnerability Assessment - ARUN M</title>
+    <style>
+        :root {
+            --primary: #3b82f6; /* Blue for Nmap/Network */
+            --primary-dark: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent-bg: #f1f5f9;
+            --code-bg: #1e293b;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .header-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 45px;
+            border-radius: 24px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-card h1 {
+            margin: 0;
+            font-size: 2rem;
+            letter-spacing: -0.025em;
+        }
+
+        .student-info {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+
+        .student-info span b {
+            color: var(--primary);
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 0;
+            color: var(--text-main);
+        }
+
+        h2::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        /* Code Styling */
+        .code-block {
+            background: var(--code-bg);
+            color: #f8fafc;
+            padding: 18px;
+            border-radius: 12px;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .explanation-box {
+            background: var(--accent-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14.5px;
+            color: var(--text-main);
+        }
+
+        /* Findings Badges */
+        .finding-tag {
+            display: inline-block;
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 2px 10px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        /* Lists */
+        .grid-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .list-item {
+            background: var(--accent-bg);
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .list-item::before {
+            content: '→';
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-list { grid-template-columns: 1fr; }
+            .student-info { flex-direction: column; gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="header-card">
+        <h1>Website Vulnerability Assessment</h1>
+        <p style="color: #94a3b8; margin: 10px 0 0 0;">In-depth Security Infrastructure Analysis using Nmap</p>
+        <div class="student-info">
+            <span>NAME: <b>ARUN M</b></span>
+            <span>KIT ID: <b>82375</b></span>
+        </div>
+    </header>
+
+    <section class="section-card">
+        <h2>Objective & Environment</h2>
+        <p>Systematically scanning <b>hotelvrisa.com</b> to identify open ports, service versions, and SSL/TLS weaknesses using Nmap v7.98 on Kali Linux.</p>
+    </section>
+
+    <section class="section-card">
+        <h2>Initial Discovery & Port Scanning</h2>
+        <div class="explanation-box">
+            Installation verification followed by host discovery and a standard TCP SYN scan of the top 1000 ports.
+        </div>
+        <div class="code-block">
+            nmap -sn hotelvrisa.com<br>
+            nmap hotelvrisa.com
+        </div>
+        <div class="grid-list">
+            <div class="list-item">Host Discovery: Alive</div>
+            <div class="list-item">Exposed Ports: 21, 53, 80, 443, 1433, 3306</div>
+        </div>
+    </section>
+
+    <section class="section-card">
+        <h2>Service & OS Fingerprinting</h2>
+        <div class="explanation-box">
+            Using aggressive scanning (<b>-A</b>) and version detection (<b>-sV</b>) to identify the specific software and operating system.
+        </div>
+        <div class="code-block">
+            nmap -sV hotelvrisa.com<br>
+            nmap -O hotelvrisa.com
+        </div>
+        <div class="grid-list">
+            <div class="list-item">OS: Windows Server</div>
+            <div class="list-item">Web: Microsoft IIS 10.0</div>
+            <div class="list-item">DB: Microsoft SQL Server 2022</div>
+            <div class="list-item">Mail: MailEnable SMTP/POP3</div>
+        </div>
+    </section>
+
+    
+
+    <section class="section-card">
+        <h2>Vulnerability & SSL Analysis</h2>
+        <div class="finding-tag">CRITICAL FINDINGS</div>
+        <div class="explanation-box">
+            Analyzing HTTP security headers and SSL/TLS cipher suites for cryptographic weaknesses.
+        </div>
+        <div class="code-block">
+            nmap --script http-security-headers -p 80,443<br>
+            nmap --script ssl-enum-ciphers -p 443
+        </div>
+        <div class="grid-list">
+            <div class="list-item" style="color: #dc2626;">3DES Cipher Enabled (Sweet32 Vulnerable)</div>
+            <div class="list-item" style="color: #dc2626;">HSTS Enforcement Missing</div>
+            <div class="list-item">Weak CBC Ciphers detected</div>
+            <div class="list-item">Version Disclosure headers present</div>
+        </div>
+    </section>
+
+    
+
+    <section class="section-card">
+        <h2>Key Vulnerabilities Identified</h2>
+        <div class="grid-list">
+            <div class="list-item">Excessive service exposure (FTP, SQL, Mail).</div>
+            <div class="list-item">Cryptographic weakness (3DES Support).</div>
+            <div class="list-item">Information Leakage via Service Headers.</div>
+            <div class="list-item">Insecure Web Headers (Missing HSTS).</div>
+        </div>
+    </section>
+
+    <section class="section-card" style="border-top: 4px solid var(--primary);">
+        <h2>Strategic Recommendations</h2>
+        <div class="grid-list">
+            <div class="list-item">Disable 3DES and enforce TLS 1.2+.</div>
+            <div class="list-item">Implement HSTS and hide IIS versions.</div>
+            <div class="list-item">Close non-essential ports via Firewall.</div>
+            <div class="list-item">Deploy IDS/IPS for real-time monitoring.</div>
+        </div>
+    </section>
+
+    <div class="footer">
+        Project Completed by ARUN M | Authorized Educational Scan | hotelvrisa.com Analysis
+    </div>
+</div>
+
+</body>
+</html>
